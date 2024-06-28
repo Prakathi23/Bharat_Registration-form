@@ -1,4 +1,5 @@
 Create a file named index.html:
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,4 +25,84 @@ Create a file named index.html:
     <script src="script.js"></script>
 </body>
 </html>
+Create a file named styles.css for styling:
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #5cb85c;
+    color: #fff;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+#message {
+    margin-top: 20px;
+}
+Create a file named script.js for handling the form submission:
+document.getElementById('registrationForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+    };
+
+    try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        document.getElementById('message').innerText = result.message;
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('message').innerText = 'Error occurred';
+    }
+});
+
 
