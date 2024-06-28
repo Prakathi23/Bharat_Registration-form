@@ -1,0 +1,66 @@
+1.Initialize a new Node.js project and install necessary dependencies:
+___bash___:
+mkdir registration-form
+cd registration-form
+npm init -y
+npm install express mongoose body-parser
+2.Create a file named server.js:
+___javascript___:
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const path = require('path');
+
+const app = express();
+const port = 3000;
+
+// Middleware
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/registrationDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Define a schema
+const userSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    password: String
+});
+
+// Define a model
+const User = mongoose.model('User', userSchema);
+
+// Handle registration
+app.post('/register', async (req, res) => {
+    const { name, email, password } = req.body;
+
+    const newUser = new User({
+        name,
+        email,
+        password
+    });
+
+    try {
+        await newUser.save();
+        res.json({ message: 'Registration successful!' });
+    } catch (error) {
+        res.json({ message: 'Registration failed!', error });
+    }
+});
+
+// Serve the frontend
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});
+3.Ensure you have MongoDB running on your machine. You can start MongoDB with the following command if you have it installed locally:
+___bash___
+mongod
+4.Place your frontend files (index.html, styles.css, script.js) in a folder named public within your project directory.
+5.Start your Node.js server:
+___bash___
+node server.js
